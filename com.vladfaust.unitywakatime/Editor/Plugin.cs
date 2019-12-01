@@ -59,6 +59,9 @@ namespace WakaTime {
       LinkCallbacks();
     }
 
+#pragma warning disable 0649
+// "never assigned" warning disabled as below fields are set using reflexion.
+
     struct Response<T> {
       public string error;
       public T data;
@@ -70,6 +73,7 @@ namespace WakaTime {
       public string type;
       public float time;
     }
+#pragma warning restore 0649
 
     struct Heartbeat {
       public string entity;
@@ -111,7 +115,6 @@ namespace WakaTime {
 
       var request = UnityWebRequest.Post(URL_PREFIX + "users/current/heartbeats?api_key=" + _apiKey, string.Empty);
       request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(heartbeatJSON));
-      request.chunkedTransfer = false;
       request.SetRequestHeader("Content-Type", "application/json");
 
       request.SendWebRequest().completed += (operation) => {
@@ -173,7 +176,7 @@ namespace WakaTime {
       if (clean) {
         EditorApplication.playModeStateChanged -= OnPlaymodeStateChanged;
         EditorApplication.contextualPropertyMenu -= OnPropertyContextMenu;
-        EditorApplication.hierarchyWindowChanged -= OnHierarchyWindowChanged;
+        EditorApplication.hierarchyChanged -= OnHierarchyWindowChanged;
         EditorSceneManager.sceneSaved -= OnSceneSaved;
         EditorSceneManager.sceneOpened -= OnSceneOpened;
         EditorSceneManager.sceneClosing -= OnSceneClosing;
@@ -182,7 +185,7 @@ namespace WakaTime {
 
       EditorApplication.playModeStateChanged += OnPlaymodeStateChanged;
       EditorApplication.contextualPropertyMenu += OnPropertyContextMenu;
-      EditorApplication.hierarchyWindowChanged += OnHierarchyWindowChanged;
+      EditorApplication.hierarchyChanged += OnHierarchyWindowChanged;
       EditorSceneManager.sceneSaved += OnSceneSaved;
       EditorSceneManager.sceneOpened += OnSceneOpened;
       EditorSceneManager.sceneClosing += OnSceneClosing;
